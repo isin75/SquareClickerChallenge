@@ -1,59 +1,37 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 
-import { input } from '../../redux/reducers/game'
+import { input, getRandomCell } from '../../redux/func/gameFunc'
 import { history } from '../../redux'
+import CustomField from './customField'
+import HardModeButton from './hardModeButton'
 
 const InputBlock = () => {
-  const [inputX, setInputX] = useState(0)
-  const [inputY, setInputY] = useState(0)
   const dispatch = useDispatch()
 
-  const handleInputX = (e) => {
-    setInputX(e.target.value)
-  }
-
-  const handleInputY = (e) => {
-    setInputY(e.target.value)
-  }
-
-  const handleClickStart = () => {
-    dispatch(input(inputX, inputY))
-    setInputX(0)
-    setInputY(0)
+  const handleClickFieldSize = (size) => {
+    dispatch(input(size, size))
+    dispatch(getRandomCell())
     history.push('/game')
   }
 
+  const menuButtonStyle =
+    'mb-1.5 transition duration-300 ease-in-out font-semibold py-2 w-48 mr-1 rounded bg-purple-600 focus:text-black hover:bg-purple-900 text-white'
+
   return (
     <div className="flex items-center justify-center">
-      <div className="bg-gray-100 w-[450px] h-[350px] flex flex-col m-24 rounded-lg border-4 border-solid border-gray-300">
-        <div className="flex flex-col justify-center items-center m-4">
-          <div className="font-serif font-semibold text-lg">Enter number of lines</div>
-          <input
-            value={inputX}
-            onChange={(e) => handleInputX(e)}
-            className="font-serif font-semibold text-base m-3 rounded-lg border-4 border-solid border-gray-300"
-            type="number"
-          />
-        </div>
-        <div className="flex flex-col justify-center items-center m-4">
-          <div className="font-serif font-semibold text-lg">Enter the number of columns</div>
-          <input
-            className="font-serif font-semibold text-base m-3 rounded-lg border-4 border-solid border-gray-300"
-            type="number"
-            value={inputY}
-            onChange={(e) => handleInputY(e)}
-          />
-        </div>
-        <div className="flex flex-col justify-center items-center m-4">
-          <button
-            onClick={() => handleClickStart()}
-            className="font-serif font-semibold text-lg bg-gray-200 rounded-lg border-2 border-solid border-gray-400 p-2"
-            type="button"
-          >
-            Start
-          </button>
-        </div>
+      <div className="bg-gray-100 w-[450px] h-[350px] flex flex-col items-center justify-center m-24 rounded-lg border-4 border-solid border-gray-300">
+        <button type="button" className={menuButtonStyle} onClick={() => handleClickFieldSize(5)}>
+          Small
+        </button>
+        <button type="button" className={menuButtonStyle} onClick={() => handleClickFieldSize(7)}>
+          Medium
+        </button>
+        <button type="button" className={menuButtonStyle} onClick={() => handleClickFieldSize(9)}>
+          Big
+        </button>
+        <CustomField />
+        <HardModeButton />
       </div>
     </div>
   )

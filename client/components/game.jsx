@@ -1,61 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { changeColorCell, countRed } from '../redux/reducers/game'
-
+import { game } from '../redux/func/gameFunc'
 import Header from './common/header'
-import './CSS/styles.css'
+import GameField from './common/gameField'
+import EndOfGame from './common/endOfGame'
 
 const Game = () => {
-  const { arr, red, green } = useSelector((s) => s.game)
+  const { round, rating, gameIsFinish } = useSelector((s) => s.game)
   const dispatch = useDispatch()
-
-  const game = () => {
-    const randomCell = Math.floor(Math.random() * arr.length)
-
-    const newArr = [...arr]
-
-    newArr[randomCell] = 'yellow'
-    dispatch(changeColorCell(newArr))
-
+  useEffect(() => {
     setTimeout(() => {
-      const updatedArr = [...newArr]
-      updatedArr[randomCell] = 'red'
-      dispatch(changeColorCell(updatedArr))
-      dispatch(countRed())
+      dispatch(game())
     }, 1000)
-  }
-
-  const startGame = () => {
-    const intervalId = setInterval(() => {
-      const board = arr.length
-      if (red >= board / 2 && green >= board / 2) {
-        return clearInterval(intervalId)
-      }
-      return game()
-    }, 2000)
-  }
-
+  }, [dispatch])
   return (
     <div>
       <Header />
-      <div className="flex items-center justify-center">
-        <div className="bg-gray-100 w-[450px] h-[350px] flex flex-col m-24 rounded-lg border-4 border-solid border-gray-300">
-          <div className="flex flex-wrap">
-            {arr.map((item, index) => (
-              <div
-                key={index}
-                className={`m-2 w-[45px] h-[35px] rounded-lg border-4 border-solid border-gray-300 ${item}`}
-              >
-                {false}
-              </div>
-            ))}
-          </div>
+      <div className="flex flex-col items-center justify-center">
+        <div className="bg-gray-100 mt-24 mb-8 rounded-lg border-4 border-solid border-gray-300">
+          {gameIsFinish ? <EndOfGame /> : <GameField />}
         </div>
+        <div className="text-black font-bold">Level: {round}</div>
+        <div className="text-black font-bold">Score: {Math.trunc(rating * 100)}</div>
       </div>
-      <button type="button" onClick={() => startGame()}>
-        Start
-      </button>
     </div>
   )
 }

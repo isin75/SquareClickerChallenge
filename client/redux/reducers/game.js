@@ -1,35 +1,107 @@
-const INPUT = 'squareClickerChallenge/game/INPUT'
-const CHANGE_COLOR = 'squareClickerChallenge/game/CHANGE_COLOR'
-const COUNT_RED = 'squareClickerChallenge/game/COUNT_RED'
+import actions from '../Actions/action'
 
 const initialState = {
-  x: 0,
-  y: 0,
+  row: 0,
+  col: 0,
   arr: [],
+  randomArr: [],
   red: 0,
-  green: 0
+  green: 0,
+  round: 0,
+  gameIsFinish: false,
+  currentCell: 2,
+  hardMode: -1,
+  levelTime: 1000,
+  gameResult: null,
+  rating: 0
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case INPUT: {
+    case actions.INPUT: {
       return {
         ...state,
-        x: action.inputX,
-        y: action.inputY,
+        row: action.inputX,
+        col: action.inputY,
         arr: action.gameArray
       }
     }
-    case CHANGE_COLOR: {
+    case actions.CHANGE_COLOR: {
       return {
         ...state,
         arr: action.payload
       }
     }
-    case COUNT_RED: {
+    case actions.COUNT_RED: {
       return {
         ...state,
         red: state.red + 1
+      }
+    }
+    case actions.SET_RANDOM_ARR: {
+      return {
+        ...state,
+        randomArr: action.random
+      }
+    }
+    case actions.SET_YELLOW_CELL: {
+      return {
+        ...state,
+        arr: action.payload
+      }
+    }
+    case actions.SET_GAME_STATUS: {
+      return {
+        ...state,
+        gameIsFinish: action.status
+      }
+    }
+    case actions.SET_CURRENT: {
+      return {
+        ...state,
+        currentCell: action.current
+      }
+    }
+    case actions.RED_ADD: {
+      return {
+        ...state,
+        red: action.counter
+      }
+    }
+    case actions.GREEN_ADD: {
+      return {
+        ...state,
+        green: action.counter
+      }
+    }
+    case actions.SET_GAME_RESULT: {
+      return {
+        ...state,
+        gameResult: action.result
+      }
+    }
+    case actions.TURN_HARD_MODE: {
+      return {
+        ...state,
+        hardMode: action.hardMode
+      }
+    }
+    case actions.SET_NEW_TIME: {
+      return {
+        ...state,
+        levelTime: action.newTime
+      }
+    }
+    case actions.SET_RATING: {
+      return {
+        ...state,
+        rating: action.newRating
+      }
+    }
+    case actions.SET_ROUND: {
+      return {
+        ...state,
+        round: action.newRound
       }
     }
     default:
@@ -37,16 +109,3 @@ export default (state = initialState, action) => {
   }
 }
 
-export function input(inputX, inputY) {
-  const arrLength = (inputX * inputY)
-  const gameArray = Array(arrLength).fill('gray')
-  return { type: INPUT, inputX, inputY, gameArray }
-}
-
-export function changeColorCell(newArr) {
-  return { type: CHANGE_COLOR, payload: newArr}
-}
-
-export function countRed() {
-  return { type: COUNT_RED }
-}
